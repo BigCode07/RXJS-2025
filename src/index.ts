@@ -9,9 +9,12 @@ const observer: Observer<any> = {
 const intervalo$ = new Observable<Number>((subs) => {
   const intervalID = setInterval(() => {
     subs.next(Math.random());
-  }, 1000);
+  }, 5000);
 
-  return () => clearInterval(intervalID);
+  return () => {
+    clearInterval(intervalID);
+    console.log("Intervalo destruido");
+  };
 });
 
 /**
@@ -20,7 +23,15 @@ const intervalo$ = new Observable<Number>((subs) => {
  * 3- Next,Error y complete
  */
 const subject$ = new Subject();
-intervalo$.subscribe(subject$);
+const subscription = intervalo$.subscribe(subject$);
 
-const subs1 = subject$.subscribe((rnd) => console.log("Sub1", rnd));
-const subs2 = subject$.subscribe((rnd) => console.log("Sub2", rnd));
+const subs1 = subject$.subscribe(observer);
+const subs2 = subject$.subscribe(observer);
+
+setTimeout(() => {
+  subject$.next(10);
+
+  subject$.complete();
+
+  subscription.unsubscribe();
+}, 3500);
