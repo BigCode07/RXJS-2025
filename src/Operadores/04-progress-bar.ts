@@ -1,4 +1,5 @@
-import { fromEvent, map, tap } from "rxjs";
+import { fromEvent } from "rxjs";
+import { map, tap } from "rxjs/operators";
 
 const texto = document.createElement("div");
 texto.innerHTML = `
